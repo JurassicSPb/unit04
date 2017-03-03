@@ -1,9 +1,6 @@
 package com.epam.java.se.task1_task2;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.ArrayList;
 
 /**
@@ -11,21 +8,23 @@ import java.util.ArrayList;
  */
 public class InputOutputWorker {
     private static String KEYS_PATH = "keys.txt";
-    private static String FILE_PATH = "java_code.txt";
+    private static String INPUT_FILE_PATH = "java_code.txt";
+    private static String OUTPUT_FILE_PATH = "output.txt";
     private ArrayList<String> keysCollection = new ArrayList<>();
     private StringBuilder builder;
-    private BufferedReader reader;
+    private BufferedReader streamReader;
+
     private String line;
 
 
     public ArrayList<String> getArrayOfKeysFromFileWithByteReader() {
         try {
-            reader = new BufferedReader(new InputStreamReader(
+            streamReader = new BufferedReader(new InputStreamReader(
                     new FileInputStream(KEYS_PATH), "windows-1251"));
-            while ((line = reader.readLine()) != null) {
+            while ((line = streamReader.readLine()) != null) {
                 keysCollection.add(line);
             }
-            reader.close();
+            streamReader.close();
         } catch (IOException e) {
             System.out.println("File not found");
         }
@@ -38,15 +37,15 @@ public class InputOutputWorker {
         }
     }
 
-    public String getFileWithJavaCodeToStringWithByteReader() {
+    public String getFileWithJavaCodeToStringWithByteStream() {
         builder = new StringBuilder();
         try {
-            reader = new BufferedReader(new InputStreamReader(
-                    new FileInputStream(FILE_PATH), "windows-1251"));
-            while ((line = reader.readLine()) != null) {
+            streamReader = new BufferedReader(new InputStreamReader(
+                    new FileInputStream(INPUT_FILE_PATH), "windows-1251"));
+            while ((line = streamReader.readLine()) != null) {
                 builder.append(line).append("\n");
             }
-            reader.close();
+            streamReader.close();
         } catch (IOException e) {
             System.out.println("File not found");
         }
@@ -56,7 +55,7 @@ public class InputOutputWorker {
     public String getKeyWordsAndTheirCountFromFile(String readerType) {
         builder = new StringBuilder();
         if (readerType == null || readerType.equals("")
-                || keysCollection==null) {
+                || keysCollection == null) {
             throw new NullPointerException("Empty data");
         }
         int count = 0;
@@ -67,10 +66,22 @@ public class InputOutputWorker {
                 builder.append(keysCollection.get(i)).append("\n");
             }
         }
-        return builder.append("Count: " + count).toString();
+        return builder.append("Count: ").append(count).toString();
     }
-//
-//    public void writeKeysToFile() {
-//
-//    }
+
+    public void writeKeyWordsAndTheirCountToFileWithByteStream(String keywords) {
+        if (keywords == null || keywords.equals("")) {
+            throw new NullPointerException("Empty data");
+        }
+        try {
+            FileOutputStream streamWriter = new FileOutputStream(OUTPUT_FILE_PATH);
+            byte[] keywordsInBytes = keywords.getBytes();
+            streamWriter.write(keywordsInBytes);
+            streamWriter.flush();
+            streamWriter.close();
+        } catch (IOException e) {
+            System.out.println("File not found");
+        }
+    }
+
 }

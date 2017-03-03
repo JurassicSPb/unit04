@@ -12,9 +12,14 @@ public class InputOutputWorkerTest {
 
         worker.getArrayOfKeysFromFileWithByteReader();
 //        worker.printKeys();
-//        worker.getFileWithJavaCodeToStringWithByteReader();
+//        worker.getFileWithJavaCodeToStringWithByteStream();
 
-        System.out.println(worker.getKeyWordsAndTheirCountFromFile(worker.getFileWithJavaCodeToStringWithByteReader()));
+//        System.out.println(worker.getKeyWordsAndTheirCountFromFile
+//                (worker.getFileWithJavaCodeToStringWithByteStream()));
+
+        worker.writeKeyWordsAndTheirCountToFileWithByteStream
+                (worker.getKeyWordsAndTheirCountFromFile(worker.getFileWithJavaCodeToStringWithByteStream()));
+
 
     }
 }
