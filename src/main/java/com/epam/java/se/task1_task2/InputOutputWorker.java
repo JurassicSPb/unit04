@@ -2,24 +2,50 @@ package com.epam.java.se.task1_task2;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Created by Мария on 02.03.2017.
  */
 public class InputOutputWorker {
     private StringBuilder builder;
-    private BufferedReader streamReader;
+    private ArrayList<String> keysCollection;
+    private BufferedReader charReader;
+    private FileInputStream byteReader;
     private String line;
+    private int read;
 
-    public ArrayList<String> getArrayOfKeysFromFileWithByteReader(String fileWithKeysPath) {
-        ArrayList<String> keysCollection = new ArrayList<>();
+    public ArrayList<String> getArrayOfKeysFromFileWithCharReader(String fileWithKeysPath) {
+        if (fileWithKeysPath==null){
+            throw new NullPointerException("File not found");
+        }
+        keysCollection = new ArrayList<>();
         try {
-            streamReader = new BufferedReader(new InputStreamReader(
-                    new FileInputStream(fileWithKeysPath), "windows-1251"));
-            while ((line = streamReader.readLine()) != null) {
+            charReader = new BufferedReader(new FileReader(fileWithKeysPath));
+            while ((line = charReader.readLine()) != null) {
                 keysCollection.add(line);
             }
-            streamReader.close();
+            charReader.close();
+        } catch (IOException e) {
+            System.out.println("File not found");
+        }
+        return keysCollection;
+    }
+    public ArrayList<String> getArrayOfKeysFromFileWithByteReader (String fileWithKeysPath) {
+        if (fileWithKeysPath==null){
+            throw new NullPointerException("File not found");
+        }
+        keysCollection = new ArrayList<>();
+        builder = new StringBuilder();
+        try {
+            byteReader = new FileInputStream(fileWithKeysPath);
+            while ((read = byteReader.read()) != -1) {
+                builder.append((char) read);
+            }
+            String[] separator = builder.toString().split("[\\s]+");
+            Collections.addAll(keysCollection, separator);
+
+            byteReader.close();
         } catch (IOException e) {
             System.out.println("File not found");
         }
@@ -35,15 +61,33 @@ public class InputOutputWorker {
         }
     }
 
-    public String getStringWithJavaCodeFromFileWithByteStream(String inputFilePath) {
+    public String getStringWithJavaCodeFromFileWithCharReader(String inputFilePath) {
+        if (inputFilePath==null){
+            throw new NullPointerException("File not found");
+        }
         builder = new StringBuilder();
         try {
-            streamReader = new BufferedReader(new InputStreamReader(
-                    new FileInputStream(inputFilePath), "windows-1251"));
-            while ((line = streamReader.readLine()) != null) {
+            charReader = new BufferedReader(new FileReader(inputFilePath));
+            while ((line = charReader.readLine()) != null) {
                 builder.append(line).append("\n");
             }
-            streamReader.close();
+            charReader.close();
+        } catch (IOException e) {
+            System.out.println("File not found");
+        }
+        return builder.toString();
+    }
+    public String getStringWithJavaCodeFromFileWithByteReader(String inputFilePath) {
+        if (inputFilePath==null){
+            throw new NullPointerException("File not found");
+        }
+        builder = new StringBuilder();
+        try {
+            byteReader = new FileInputStream(inputFilePath);
+            while ((read = byteReader.read()) != -1) {
+                builder.append((char)read);
+            }
+            byteReader.close();
         } catch (IOException e) {
             System.out.println("File not found");
         }
@@ -67,16 +111,16 @@ public class InputOutputWorker {
         return builder.append("Count: ").append(count).toString();
     }
 
-    public void writeKeyWordsAndTheirCountToFileWithByteStream(String outputFilePath, String keywords) {
+    public void writeKeyWordsAndTheirCountToFileWithByteOutputStream(String outputFilePath, String keywords) {
         if (keywords == null || keywords.equals("")) {
             throw new NullPointerException("Empty data");
         }
         try {
-            FileOutputStream streamWriter = new FileOutputStream(outputFilePath);
+            FileOutputStream byteWriter = new FileOutputStream(outputFilePath);
             byte[] keywordsInBytes = keywords.getBytes();
-            streamWriter.write(keywordsInBytes);
-            streamWriter.flush();
-            streamWriter.close();
+            byteWriter.write(keywordsInBytes);
+            byteWriter.flush();
+            byteWriter.close();
         } catch (IOException e) {
             System.out.println("File not found");
         }
