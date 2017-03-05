@@ -3,6 +3,7 @@ package com.epam.java.se.task4;
 import org.junit.Test;
 
 import java.io.File;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -56,7 +57,7 @@ public class FilmCollectionTest {
 
         films.printFilmCollection();
 
-        assertTrue(films.getFilmCollection().size()==1);
+        assertTrue(films.getFilmCollection().size() == 1);
 
         for (Map.Entry<Film, List<Actor>> entry : films.getFilmCollection().entrySet()) {
             assertTrue(!entry.getKey().equals(film));
@@ -78,23 +79,29 @@ public class FilmCollectionTest {
 
         films.saveCollection(PATH, films);
 
-        assertTrue(file.exists() && file.length()>100);
+        assertTrue(file.exists() && file.length() > 100);
     }
 
     @Test
     public void deserialize() throws Exception {
+        FilmCollection before = new FilmCollection();
 
+        FilmCollection after = before.loadCollection(PATH);
+
+        after.printFilmCollection();
+
+        String film = "Dogma";
+        Iterator<Map.Entry<Film, List<Actor>>> iter = after.getFilmCollection().entrySet().iterator();
+        while (iter.hasNext()) {
+            Map.Entry<Film, List<Actor>> entry = iter.next();
+            if (film.equalsIgnoreCase(entry.getKey().getTitle())) {
+                assertTrue(entry.getKey().getTitle().equals(film));
+            }
+        }
     }
 
     @Test
     public void applicationTest() throws Exception {
 
     }
-
-
-//    @Test
-//    public void addFilmTest(){
-//        films.saveCollection(PATH, films);
-//        FilmCollection collection = films.loadCollection(PATH);
-
 }
